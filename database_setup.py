@@ -2,17 +2,14 @@ import sqlite3
 import os
 from datetime import datetime
 
-# --- Configurações do Banco de Dados ---
-DB_FILE = 'quiz_app.db' # Nome do arquivo do banco de dados SQLite
+#  Configurações do Banco de Dados 
+DB_FILE = 'quiz_app.db' # Nome do arquivo do banco de dados SQLite, pfv não mude isso
 
 def conectar_db():
-    """
-    Conecta ao banco de dados SQLite. Se o arquivo não existir, ele será criado.
-    Retorna o objeto de conexão.
-    """
+   # conecta ao banco e se essa merda n exitir, cria um novo
     try:
         conn = sqlite3.connect(DB_FILE)
-        conn.execute("PRAGMA foreign_keys = ON;") # Habilita o suporte a chaves estrangeiras
+        conn.execute("PRAGMA foreign_keys = ON;") 
         print(f"Conectado ao banco de dados: {DB_FILE}")
         return conn
     except sqlite3.Error as e:
@@ -20,17 +17,13 @@ def conectar_db():
         return None
 
 def criar_tabelas():
-    """
-    Cria todas as tabelas necessárias para o aplicativo de quiz.
-    """
+    # cria tabelas
     conn = conectar_db()
     if conn is None:
         return
 
     cursor = conn.cursor()
 
-    # Tabela Usuarios
-    # Armazena informações dos usuários (jogadores)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,8 +35,6 @@ def criar_tabelas():
     ''')
     print("Tabela 'Usuarios' criada ou já existe.")
 
-    # Tabela Quizzes
-    # Armazena os diferentes quizzes disponíveis
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Quizzes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,8 +47,6 @@ def criar_tabelas():
     ''')
     print("Tabela 'Quizzes' criada ou já existe.")
 
-    # Tabela Perguntas
-    # Armazena as perguntas de cada quiz
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Perguntas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,8 +59,6 @@ def criar_tabelas():
     ''')
     print("Tabela 'Perguntas' criada ou já existe.")
 
-    # Tabela OpcoesRespostas
-    # Armazena as opções de resposta para perguntas de múltipla escolha
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS OpcoesRespostas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,8 +70,6 @@ def criar_tabelas():
     ''')
     print("Tabela 'OpcoesRespostas' criada ou já existe.")
 
-    # Tabela TentativasQuiz
-    # Registra cada vez que um usuário inicia um quiz
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS TentativasQuiz (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -99,8 +84,6 @@ def criar_tabelas():
     ''')
     print("Tabela 'TentativasQuiz' criada ou já existe.")
 
-    # Tabela RespostasUsuarios
-    # Armazena as respostas dadas pelos usuários em cada tentativa
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS RespostasUsuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -121,9 +104,7 @@ def criar_tabelas():
     print("Todas as tabelas foram criadas com sucesso ou já existiam.")
 
 def verificar_db():
-    """
-    Verifica se o arquivo do banco de dados existe e se as tabelas foram criadas.
-    """
+  
     if os.path.exists(DB_FILE):
         print(f"\nArquivo do banco de dados '{DB_FILE}' encontrado.")
         conn = conectar_db()
@@ -138,10 +119,8 @@ def verificar_db():
     else:
         print(f"\nArquivo do banco de dados '{DB_FILE}' NÃO encontrado.")
 
-# --- Execução Principal ---
 if __name__ == "__main__":
-    # Remove o arquivo do banco de dados se ele já existir para começar do zero
-    # CUIDADO: Isso apagará todos os dados existentes! Use apenas para testes.
+
     if os.path.exists(DB_FILE):
         os.remove(DB_FILE)
         print(f"Arquivo '{DB_FILE}' existente removido para recriação.")
