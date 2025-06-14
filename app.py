@@ -80,3 +80,96 @@ class App(ctk.CTk):
 if __name__ == "__main__":
      app = App()
      app.mainloop()
+
+# Tela do Quiz - Novo Milionário
+import customtkinter as ctk
+import sqlite3
+
+class Quiz(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.configurar_janela()
+        self.carregar_perguntas()
+        self.indice_pergunta = 0
+        self.pontuacao = 0
+        self.exibir_pergunta()
+
+    def configurar_janela(self):
+        #Configuração inicial da janela
+        self.geometry("700x400")
+        self.title("Quiz - Novo Milionário")
+        self.resizable(False, False)
+        self.configure(fg_color="#3b5704")
+
+    def conectar_db(self):
+        #Conecta ao banco e retorna um cursor.
+        conn = sqlite3.connect("quiz_app.db")
+        conn.row_factory = sqlite3.Row  # Melhor leitura dos dados
+        return conn, conn.cursor()
+
+    def carregar_perguntas(self):
+        #Puxa as perguntas do banco e organiza num formato usável.
+        conn, cursor = self.conectar_db()
+        cursor.execute("""
+            SELECT p.id, p.texto_pergunta
+            FROM Perguntas p
+            ORDER BY p.id;
+        """)
+        self.perguntas = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+
+    def exibir_pergunta(self):
+        #Mostra a pergunta atual e suas opções de resposta.
+        if self.indice_pergunta < len(self.perguntas):
+            pergunta = self.perguntas[self.indice_pergunta]
+            self.frame_quiz = ctk.CTkFrame(self, width=350, height=380, fg_color="#6c921f")
+            self.frame_quiz.place(x=175, y=40)
+            
+            # Exibe a pergunta
+            self.lb_pergunta = ctk.CTkLabel(self.frame_quiz, text=pergunta["texto_pergunta"], 
+                                            font=("Times New Roman", 20, "bold"), text_color="#edffcc", wraplength=300)
+            self.lb_pergunta.grid(row=0, column=0, padx=10, pady=10)
+
+            # Puxar opções de resposta
+            conn, cursor = self.conectar_db()
+            cursor.execute("SELECT id, texto_opcao, correta FROM OpcoesRespostas WHERE pergunta_id = ?", (pergunta["id"],))
+            opcoes = [dict(row) for row in cursor.fetchall()]
+            conn.close()
+
+            self.opcoes_respostas = []
+            for i, opcao in enumerate(opcoes):
+                btn_resposta = ctk.CTkButton(self.frame_quiz, width=300, text=opcao["texto_opcao"],
+                                             font=("Times New Roman", 15, "bold"), corner_radius=15, 
+                                             fg_color="#edffcc", text_color="#3b5704", hover_color="#59981a",
+                                             command=lambda correta=opcao["correta"]: self.verificar_resposta(correta))
+                btn_resposta.grid(row=i+1, column=0, padx=10, pady=5)
+                self.opcoes_respostas.append(btn_resposta)
+        else:
+            self.exibir_resultado()
+
+    def verificar_resposta(self, correta):
+        #Verifica se a resposta tá certa e avança no quiz.
+        if correta:
+            self.pontuacao += 10  # Valor ajustável conforme o quiz
+        self.indice_pergunta += 1
+        self.frame_quiz.destroy()
+        self.exibir_pergunta()
+
+    def exibir_resultado(self):
+        #Mostra a pontuação final do usuário.
+        self.frame_resultado = ctk.CTkFrame(self, width=350, height=380, fg_color="#6c921f")
+        self.frame_resultado.place(x=175, y=40)
+
+        lb_resultado = ctk.CTkLabel(self.frame_resultado, text=f"Fim do quiz! Sua pontuação: {self.pontuacao}",
+                                    font=("Times New Roman", 25, "bold"), text_color="#edffcc")
+        lb_resultado.grid(row=0, column=0, padx=10, pady=20)
+
+        btn_voltar = ctk.CTkButton(self.frame_resultado, width=300, text="Voltar ao Início",
+                                   font=("Times New Roman", 20, "bold"), corner_radius=15, 
+                                   fg_color="#edffcc", text_color="#3b5704", hover_color="#59981a",
+                                   command=self.destroy)
+        btn_voltar.grid(row=1, column=0, padx=10, pady=10)
+
+if __name__ == "__main__":
+    quiz = Quiz()
+    quiz.mainloop()
