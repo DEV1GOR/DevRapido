@@ -13,6 +13,8 @@ class App(ctk.CTk):
         self.title("Novo Milionário")
         self.resizable(False, False)
         self.configure(fg_color="#3b5704")
+
+
         
     def tela_login(self):
         
@@ -26,8 +28,8 @@ class App(ctk.CTk):
         self.frame_login = ctk.CTkFrame(self, width=350, height=380, fg_color="#6c921f")
         self.frame_login.place(x = 350, y = 30)
 
-        self.usuario_login_entrada = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="E-mail", font=("Times New Roman", 20, "bold"), corner_radius=15, fg_color="#edffcc", placeholder_text_color="#59981a", border_color="#3b5704")
-        self.usuario_login_entrada.grid(row=1, column=0, padx=10, pady=10)
+        self.email_login_entrada = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="E-mail", font=("Times New Roman", 20, "bold"), corner_radius=15, fg_color="#edffcc", placeholder_text_color="#59981a", border_color="#3b5704")
+        self.email_login_entrada.grid(row=1, column=0, padx=10, pady=10)
 
         self.senha_login_entrada = ctk.CTkEntry(self.frame_login, width=300, placeholder_text="Senha", font=("Times New Roman", 20, "bold"), corner_radius=15, fg_color="#edffcc", placeholder_text_color="#59981a", border_color="#3b5704", show="!")
         self.senha_login_entrada.grid(row=2, column=0, padx=10, pady=10)
@@ -57,8 +59,8 @@ class App(ctk.CTk):
         self.usuario_cadastro_entrada = ctk.CTkEntry(self.frame_cadastro, width=300, placeholder_text="Nome de Usuário", font=("Times New Roman", 20, "bold"), corner_radius=15, fg_color="#edffcc", placeholder_text_color="#59981a", border_color="#3b5704")
         self.usuario_cadastro_entrada.grid(row=1, column=0, padx=10, pady=5)
 
-        self.usuario_cadastro_entrada = ctk.CTkEntry(self.frame_cadastro, width=300, placeholder_text="E-mail", font=("Times New Roman", 20, "bold"), corner_radius=15, fg_color="#edffcc", placeholder_text_color="#59981a", border_color="#3b5704")
-        self.usuario_cadastro_entrada.grid(row=2, column=0, padx=10, pady=5)
+        self.email_cadastro_entrada = ctk.CTkEntry(self.frame_cadastro, width=300, placeholder_text="E-mail", font=("Times New Roman", 20, "bold"), corner_radius=15, fg_color="#edffcc", placeholder_text_color="#59981a", border_color="#3b5704")
+        self.email_cadastro_entrada.grid(row=2, column=0, padx=10, pady=5)
 
         self.senha_cadastro_entrada = ctk.CTkEntry(self.frame_cadastro, width=300, placeholder_text="Senha", font=("Times New Roman", 20, "bold"), corner_radius=15, fg_color="#edffcc", placeholder_text_color="#59981a", border_color="#3b5704", show="!")
         self.senha_cadastro_entrada.grid(row=3, column=0, padx=10, pady=5)
